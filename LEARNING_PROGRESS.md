@@ -25,8 +25,8 @@
 | 1.4 | Continuity Equation | ⏳ Pending | — |
 | 1.5 | Finite Difference Method | ✅ Done | foundations/module1_05_finite_differences.ipynb |
 | 1.6 | 1D Linear Advection | ✅ Done | foundations/module1_06_1d_advection.ipynb |
-| 1.7 | 1D Diffusion Equation | ⏳ Next up | — |
-| 1.8 | 1D Burgers' Equation | ⏳ Pending | — |
+| 1.7 | 1D Diffusion Equation | ✅ Done | foundations/module1_07_1d_diffusion.ipynb |
+| 1.8 | 1D Burgers' Equation | ⏳ Next up | — |
 | — | Module 1 Test | ⏳ Pending | — |
 
 ### Module 2: Core CFD Methods — ⏳ Not Started
@@ -76,6 +76,18 @@
 - **Numerical diffusion:** 1st-order schemes artificially smear solution; decreases with finer grid
 - **Periodic BC:** wave wraps around domain (x = 2.1 → appears at x = 0.1)
 - **Diffusion vs Advection spatial stencil:** diffusion has no preferred direction → Central; advection has direction → Upwind
+- **General upwind scheme:** max(c,0)·FTBS + min(c,0)·FTFS handles any sign of c automatically
+
+### 1.7 — 1D Diffusion Equation
+- Diffusion equation: ∂u/∂t = α ∂²u/∂x²
+- Curvature sign rule: negative curvature (peak) → u decreases; positive curvature (valley) → u increases
+- **Explicit FTCS:** u_i^{n+1} = u_i^n + r(u_{i+1}^n − 2u_i^n + u_{i-1}^n), stability requires r = α·dt/dx² ≤ 0.5
+- **Implicit BTCS:** tridiagonal system A·u^{n+1} = u^n, unconditionally stable (any r)
+- Halving Δx → must shrink Δt by 4× to stay stable (explicit only); not required for implicit
+- Stability ≠ Accuracy: implicit with large r is stable but inaccurate; choose Δt based on physics to resolve
+- **Crank-Nicolson** = average of explicit + implicit → 2nd order in time, unconditionally stable
+- Decision rule: advection → explicit upwind; diffusion → implicit BTCS; N-S → IMEX (explicit convection, implicit viscous)
+- Extra notebooks: foundations/module1_schemes_comparison.ipynb (all 4 scheme combinations side-by-side)
 
 ---
 
@@ -89,6 +101,9 @@
 | Said "downstream" is where to look for upstream info | Look **upstream** — where the wave comes from |
 | Pulse appearing left = going backward | Wave wrapped around periodic domain (Pac-Man) |
 | Heat plate analogy — "backward space" = looking at left BC | Spatial stencil for diffusion is **central** (both sides); left BC is just a boundary value |
+| Curvature < 0 → u is "unstable" | Curvature < 0 = peak → u physically **decreases** (no numerics involved) |
+| Said left is upstream when c < 0 | c < 0 means wave moves left → upstream is **right** → use FTFS |
+| Halving Δx → Δt halved to stay stable | Δt must shrink by **4×** (diffusion stability: r ∝ Δt/Δx²) |
 
 ---
 
@@ -99,4 +114,4 @@
 - Student is comfortable with NumPy vectorized operations
 - When confused, re-explain with a different analogy
 - Student asks deep "why" questions — reward and engage them
-- Next session: start with **Module 1.7 — 1D Diffusion Equation**
+- Next session: start with **Module 1.8 — 1D Burgers' Equation**
