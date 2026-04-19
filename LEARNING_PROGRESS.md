@@ -27,10 +27,20 @@
 | 1.6 | 1D Linear Advection | ✅ Done | foundations/module1_06_1d_advection.ipynb |
 | 1.7 | 1D Diffusion Equation | ✅ Done | foundations/module1_07_1d_diffusion.ipynb |
 | 1.8 | 1D Burgers' Equation | ✅ Done | foundations/module1_08_burgers_equation.ipynb, foundations/module1_08b_burgers_gaussian.ipynb |
-| — | Module 1 Test | ⏳ Pending | — |
+| — | Module 1 Test | ✅ Done (8.5/10) | — |
 
-### Module 2: Core CFD Methods — ⏳ Not Started
-- 2D Scalar Transport, FVM, Navier-Stokes, SIMPLE Algorithm, Lid-Driven Cavity, BCs
+### Module 2: Core CFD Methods — ⏳ Next Up
+| # | Topic | Status | Notebook |
+|---|-------|--------|----------|
+| 2.9 | 2D Scalar Transport | ⏳ Next up | — |
+| 2.10 | Finite Volume Method (FVM) | ⏳ Pending | — |
+| 2.11 | Navier-Stokes Equations | ⏳ Pending | — |
+| 2.12 | Pressure-Velocity Coupling | ⏳ Pending | — |
+| 2.13 | SIMPLE Algorithm | ⏳ Pending | — |
+| 2.14 | Lid-Driven Cavity Flow | ⏳ Pending | — |
+| 2.15 | Flow Over Objects | ⏳ Pending | — |
+| 2.16 | Boundary Conditions | ⏳ Pending | — |
+| — | Module 2 Test | ⏳ Pending | — |
 
 ### Module 3: Advanced Topics — ⏳ Not Started
 - Turbulence, higher-order schemes, multigrid, compressible flow, PINNs
@@ -78,6 +88,18 @@
 - **Diffusion vs Advection spatial stencil:** diffusion has no preferred direction → Central; advection has direction → Upwind
 - **General upwind scheme:** max(c,0)·FTBS + min(c,0)·FTFS handles any sign of c automatically
 
+### Module 1 Test — Results (8.5/10, Pass)
+- ✅ Q1: Grid scaling (4× in 2D) — correct
+- ✅ Q2: Nonlinearity from (u·∇)u — correct
+- ✅ Q3: 2nd-order error halving (0.00075) — correct
+- ✅ Q4: Max dt from CFL (0.025) — correct
+- ✅ Q5: FTFS code is incorrect for c>0 — correct
+- ✅ Q6: Max stable dt for explicit diffusion (0.25) — correct
+- ✅ Q7: Implicit BTCS stable for any r — correct
+- ⚠️ Q8: t_s = 0.98 (should be 1.0 exactly); missed rarefaction on left flank
+- ❌ Q9: Misdiagnosed diffusion formula (correct) as error; missed: (1) central diff for convection is unstable, (2) no BC update for endpoints
+- ✅ Q10: Both stability conditions + halving dx → halving dt — correct
+
 ### 1.8 — 1D Burgers' Equation
 - Burgers equation: ∂u/∂t + u·∂u/∂x = ν·∂²u/∂x²
 - Nonlinearity source: u·∂u/∂x — the wave speed **is** the solution itself
@@ -93,7 +115,9 @@
 - **Two stability conditions simultaneously:** CFL ≤ 1 (convection) AND r ≤ 0.5 (diffusion)
 - Rarefaction: left flank of Gaussian/sine broadens (characteristics diverge)
 - Connection to N-S: Burgers + pressure gradient = 1D incompressible momentum equation
-- Module 1.8 quiz given and answered (see below)
+- Module 1.8 quiz: 3/5 (first attempt); key gaps: shock time exact value, grid resolution at high Re
+- Exercise notebooks written by student: exercise/1d_invicid_burgers_equation.ipynb, exercise/1d_viscous_burgers_equation.ipynb
+- Student independently caught np.roll periodic BC, dual stability conditions, adaptive dt concept
 
 ### 1.7 — 1D Diffusion Equation
 - Diffusion equation: ∂u/∂t = α ∂²u/∂x²
@@ -121,6 +145,10 @@
 | Curvature < 0 → u is "unstable" | Curvature < 0 = peak → u physically **decreases** (no numerics involved) |
 | Said left is upstream when c < 0 | c < 0 means wave moves left → upstream is **right** → use FTFS |
 | Halving Δx → Δt halved to stay stable | Δt must shrink by **4×** (diffusion stability: r ∝ Δt/Δx²) |
+| t_s for sin(x) → hardcoded 0.98 | Exact: t_s = −1/min(cos x) = −1/(−1) = **1.0** |
+| Swapped diffusion numerator terms as "error" | u_{i+1} − 2u_i + u_{i-1} = u_{i-1} − 2u_i + u_{i+1} (commutative, identical) |
+| Missed that central diff for convection is always unstable | Central space for u·∂u/∂x: unconditionally unstable — same as linear advection |
+| Periodic BC: only interior updated, endpoints frozen | Must update ALL points including boundaries (use np.roll, not slicing) |
 
 ---
 
@@ -131,5 +159,7 @@
 - Student is comfortable with NumPy vectorized operations
 - When confused, re-explain with a different analogy
 - Student asks deep "why" questions — reward and engage them
-- Next session: **Module 1 Test** (covers 1.1–1.8) — student has seen all content
-- After Module 1 Test: begin **Module 2 — Core CFD Methods** starting with 2D Scalar Transport
+- Module 1 Test: **8.5/10 PASS** (19 April 2026)
+- Next session: begin **Module 2.9 — 2D Scalar Transport**
+- Watch for: student tends to miss "what happens on the other side" (rarefaction, left flank) — ask explicitly
+- Student writes clean code independently; encourage identifying bugs before running
