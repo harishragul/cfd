@@ -26,7 +26,7 @@
 | 1.5 | Finite Difference Method | ✅ Done | foundations/module1_05_finite_differences.ipynb |
 | 1.6 | 1D Linear Advection | ✅ Done | foundations/module1_06_1d_advection.ipynb |
 | 1.7 | 1D Diffusion Equation | ✅ Done | foundations/module1_07_1d_diffusion.ipynb |
-| 1.8 | 1D Burgers' Equation | ⏳ Next up | — |
+| 1.8 | 1D Burgers' Equation | ✅ Done | foundations/module1_08_burgers_equation.ipynb, foundations/module1_08b_burgers_gaussian.ipynb |
 | — | Module 1 Test | ⏳ Pending | — |
 
 ### Module 2: Core CFD Methods — ⏳ Not Started
@@ -78,6 +78,23 @@
 - **Diffusion vs Advection spatial stencil:** diffusion has no preferred direction → Central; advection has direction → Upwind
 - **General upwind scheme:** max(c,0)·FTBS + min(c,0)·FTFS handles any sign of c automatically
 
+### 1.8 — 1D Burgers' Equation
+- Burgers equation: ∂u/∂t + u·∂u/∂x = ν·∂²u/∂x²
+- Nonlinearity source: u·∂u/∂x — the wave speed **is** the solution itself
+- Each point travels at its own speed → **characteristics** converge (right flank) or diverge (left flank)
+- **Shock formation time:** t_s = −1 / min(du₀/dx)
+  - For Gaussian: t_s = 1 / (A / (σ·√e)) ≈ σ√e / A
+- **Inviscid:** ν=0 → shock forms at t_s; multi-valued solution beyond t_s → need entropy condition
+- **Viscous:** shock forms but stays sharp with thickness δ ∼ ν/U = 1/Re
+- **Adaptive time-stepping needed:** as shock steepens, u_max stays ~1 but local gradients grow; stable dt = min(CFL·dx/u_max, 0.4·dx²/ν)
+- **Hopf-Cole transformation:** linearises Burgers to heat equation; exact solution via Bessel function series
+- **Upwind required:** central differencing for u·∂u/∂x is unconditionally unstable
+- **General upwind:** max(u,0)·(u−u_left)/dx + min(u,0)·(u_right−u)/dx handles any sign
+- **Two stability conditions simultaneously:** CFL ≤ 1 (convection) AND r ≤ 0.5 (diffusion)
+- Rarefaction: left flank of Gaussian/sine broadens (characteristics diverge)
+- Connection to N-S: Burgers + pressure gradient = 1D incompressible momentum equation
+- Module 1.8 quiz given and answered (see below)
+
 ### 1.7 — 1D Diffusion Equation
 - Diffusion equation: ∂u/∂t = α ∂²u/∂x²
 - Curvature sign rule: negative curvature (peak) → u decreases; positive curvature (valley) → u increases
@@ -114,4 +131,5 @@
 - Student is comfortable with NumPy vectorized operations
 - When confused, re-explain with a different analogy
 - Student asks deep "why" questions — reward and engage them
-- Next session: start with **Module 1.8 — 1D Burgers' Equation**
+- Next session: **Module 1 Test** (covers 1.1–1.8) — student has seen all content
+- After Module 1 Test: begin **Module 2 — Core CFD Methods** starting with 2D Scalar Transport
