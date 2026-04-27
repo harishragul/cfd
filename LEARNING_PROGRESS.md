@@ -32,9 +32,9 @@
 ### Module 2: Core CFD Methods — ⏳ Next Up
 | # | Topic | Status | Notebook |
 |---|-------|--------|----------|
-| 2.9 | 2D Scalar Transport | ⏳ Next up | — |
-| 2.10 | Finite Volume Method (FVM) | ⏳ Pending | — |
-| 2.11 | Navier-Stokes Equations | ⏳ Pending | — |
+| 2.9 | 2D Scalar Transport | ✅ Done | exercise/2d_scalar_transport.ipynb |
+| 2.10 | Finite Volume Method (FVM) | ✅ Done | exercise/fvm_1d_scalar.ipynb |
+| 2.11 | Navier-Stokes Equations | ⏳ Next up | — |
 | 2.12 | Pressure-Velocity Coupling | ⏳ Pending | — |
 | 2.13 | SIMPLE Algorithm | ⏳ Pending | — |
 | 2.14 | Lid-Driven Cavity Flow | ⏳ Pending | — |
@@ -160,6 +160,22 @@
 - When confused, re-explain with a different analogy
 - Student asks deep "why" questions — reward and engage them
 - Module 1 Test: **8.5/10 PASS** (19 April 2026)
-- Next session: begin **Module 2.9 — 2D Scalar Transport**
+- Next session: **Module 2.11 — Navier-Stokes Equations**
 - Watch for: student tends to miss "what happens on the other side" (rarefaction, left flank) — ask explicitly
 - Student writes clean code independently; encourage identifying bugs before running
+- Combined 2D stability: CFL_x + CFL_y + 4r ≤ 1 (student hit instability at r=0.35, learned the hard way)
+- FVM mass conservation = 0.00e+00 exactly — student verified and understood why
+
+### 2.9 — 2D Scalar Transport
+- Extended 1D upwind/diffusion to 2D: independent upwind per direction
+- np.roll needs axis=1 (x) and axis=0 (y) — student initially missed axis argument
+- Safe dt: safety / (u/dx + v/dy + 4α/dx²) — general formula for any grid
+- Numerical diffusion ∝ u·Δx/2·(1−CFL): peak 0.618 → 0.756 when Nx doubled
+- Key bugs caught: variable collision (u=scalar vs u=velocity), roll without axis, missing /dx
+
+### 2.10 — Finite Volume Method (FVM)
+- FVM core: integrate PDE over CV → flux balance: dφ_P/dt = −(F_e − F_w)/Δx
+- Conservation: F_e of cell P = F_w of cell P+1 — exact algebraic cancellation → mass error = 0.00e+00
+- Face reconstruction: upwind for convection (directional), central for diffusion (symmetric/self-adjoint)
+- Diffusion operator [1,−2,1] is symmetric — no preferred direction — central is correct
+- Student correctly structured code with explicit F_east, F_west — clean FVM style
