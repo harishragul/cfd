@@ -29,15 +29,15 @@
 | 1.8 | 1D Burgers' Equation | ✅ Done | foundations/module1_08_burgers_equation.ipynb, foundations/module1_08b_burgers_gaussian.ipynb |
 | — | Module 1 Test | ✅ Done (8.5/10) | — |
 
-### Module 2: Core CFD Methods — ⏳ Next Up
+### Module 2: Core CFD Methods — ⏳ In Progress
 | # | Topic | Status | Notebook |
 |---|-------|--------|----------|
 | 2.9 | 2D Scalar Transport | ✅ Done | exercise/2d_scalar_transport.ipynb |
 | 2.10 | Finite Volume Method (FVM) | ✅ Done | exercise/fvm_1d_scalar.ipynb |
-| 2.11 | Navier-Stokes Equations | ⏳ Next up | — |
-| 2.12 | Pressure-Velocity Coupling | ⏳ Pending | — |
-| 2.13 | SIMPLE Algorithm | ⏳ Pending | — |
-| 2.14 | Lid-Driven Cavity Flow | ⏳ Pending | — |
+| 2.11 | Navier-Stokes Equations | ✅ Done | — |
+| 2.12 | Pressure-Velocity Coupling | ✅ Done | — |
+| 2.13 | SIMPLE Algorithm | ✅ Done | — |
+| 2.14 | Lid-Driven Cavity Flow | 🔄 In Progress | exercise/lid_driven_cavity.ipynb |
 | 2.15 | Flow Over Objects | ⏳ Pending | — |
 | 2.16 | Boundary Conditions | ⏳ Pending | — |
 | — | Module 2 Test | ⏳ Pending | — |
@@ -160,11 +160,47 @@
 - When confused, re-explain with a different analogy
 - Student asks deep "why" questions — reward and engage them
 - Module 1 Test: **8.5/10 PASS** (19 April 2026)
-- Next session: **Module 2.11 — Navier-Stokes Equations**
+- Next session: **Module 2.14 — Lid-Driven Cavity (resume implementation)**
 - Watch for: student tends to miss "what happens on the other side" (rarefaction, left flank) — ask explicitly
 - Student writes clean code independently; encourage identifying bugs before running
 - Combined 2D stability: CFL_x + CFL_y + 4r ≤ 1 (student hit instability at r=0.35, learned the hard way)
 - FVM mass conservation = 0.00e+00 exactly — student verified and understood why
+- Student asks good research questions (e.g. ML for α in SIMPLE) — encourage but redirect to finish implementation first
+
+### 2.11 — Navier-Stokes Equations
+- Q1: Student correctly identified Bernoulli / continuity as the hose-nozzle principle (p₁u₁ = p₂u₂)
+- Q2: Student identified pressure gradient −∇p as the missing term vs Burgers'
+- v∂u/∂y: student correctly connected to 2D scalar transport — y-velocity carrying x-momentum across layers
+- Re→∞ ≠ turbulence: Euler equations (inviscid) are mathematical limit; viscosity still controls smallest scales in real turbulence (Kolmogorov microscales η ~ Re⁻³/⁴)
+- Non-dimensionalization: u*=u/U, p*=p/ρU², t*=tU/L → NS in Re form
+- Euler equations used in compressible aerodynamics where viscous effects are negligible away from boundary layers
+
+### 2.12 — Pressure-Velocity Coupling
+- Core problem: momentum evolves u,v but not p; continuity ∇·u=0 has no time derivative → must be satisfied instantly
+- Pressure propagates at infinite speed (incompressible = sound speed → ∞) → requires global Poisson solve, not local stencil
+- **Projection method:** (1) Predictor: u* from momentum ignoring p; (2) ∇²p = ρ/Δt · ∇·u*; (3) u^{n+1} = u* − Δt/ρ · ∇p
+- Wall pressure BC: Neumann ∂p/∂n = 0 (from no-penetration u·n̂ = 0); outlet: Dirichlet p = p_ref
+- Poisson equation needs exactly ONE Dirichlet point to fix the constant — solution unique only up to additive constant
+- Student initially confused "nearby fluid moves" with local computation; corrected to global elliptic solve
+
+### 2.13 — SIMPLE Algorithm
+- SIMPLE = Semi-Implicit Method for Pressure-Linked Equations (Patankar & Spalding 1972) — backbone of OpenFOAM, Fluent, Star-CCM+
+- Steady-state target: drop ∂u/∂t → two coupled elliptic equations; outer iterations between momentum and pressure
+- 500×500 grid = 750,000 unknowns; exact factorization O(N³) infeasible; SIMPLE iteration O(N) per step × 50–200 iter
+- Under-relaxation α: p^{new} = p* + α_p·p'; typical α_p ≈ 0.3, α_u ≈ 0.7
+- Student correctly identified: full α_p=1 overshoots because u* is approximate → oscillation → divergence
+- Why no standalone notebook: projection + SIMPLE require Poisson solver + staggered grid + BCs + validation — all assembled in 2.14
+- ML for α: active research; basic idea not novel but geometry-agnostic RL policy with theoretical guarantees → publishable (Computers & Fluids, JCP)
+
+### 2.14 — Lid-Driven Cavity Flow (In Progress)
+- Setup: square cavity, top wall u=U_lid=1 v=0; all other walls no-slip; no inlet/outlet
+- Primary vortex forms (fluid spins inside); Re=100 → smooth laminar; Re=10000 → secondary corner vortices, potentially unsteady
+- Staggered grid: u,v at cell faces; p at cell centre — prevents checkerboard pressure oscillation
+- Pressure Dirichlet: pin p=0 at ONE interior point (e.g. [1,1]); all walls are Neumann ∂p/∂n=0
+- NumPy matrix convention: row 0 = BOTTOM of domain; top wall = index [-1]; use plt.imshow(..., origin='lower') or np.flipud for correct orientation
+- Student implementing step by step guided by tutor; Jacobi solver for Poisson acceptable for now
+- Validation target: Ghia et al. (1982) benchmark centerline u,v profiles
+- Notebook: exercise/lid_driven_cavity.ipynb
 
 ### 2.9 — 2D Scalar Transport
 - Extended 1D upwind/diffusion to 2D: independent upwind per direction

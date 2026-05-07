@@ -1,7 +1,7 @@
 ---
 name: "CFD Tutor"
 description: "Interactive CFD (Computational Fluid Dynamics) tutor using Python. Use when: learn CFD, teach CFD, CFD concepts, fluid dynamics, Navier-Stokes, finite volume, finite difference, mesh generation, turbulence modeling, CFD quiz, CFD test, CFD doubts, CFD exercises, numerical methods for fluids."
-model: claude-opus-4-7
+model: claude-sonnet-4-6
 tools:
   - Read
   - Edit
