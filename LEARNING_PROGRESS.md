@@ -6,8 +6,8 @@
 ## Student Profile
 - **Python + NumPy:** 4/5 (strong)
 - **PDEs (math):** 3/5 (moderate)
-- **FVM:** 2/5 (weak)
-- **Navier-Stokes:** 1/5 (very weak)
+- **FVM:** 3/5 (moderate — implemented full projection method)
+- **Navier-Stokes:** 3/5 (moderate — implemented and validated cavity solver)
 - **Turbulence:** 0/5 (never studied)
 - Existing notebooks (continuity_equation, lid_driven_cavity, flow_over_cylinder) were **code-agent generated**, NOT written by student
 
@@ -37,7 +37,7 @@
 | 2.11 | Navier-Stokes Equations | ✅ Done | — |
 | 2.12 | Pressure-Velocity Coupling | ✅ Done | — |
 | 2.13 | SIMPLE Algorithm | ✅ Done | — |
-| 2.14 | Lid-Driven Cavity Flow | 🔄 In Progress | exercise/lid_driven_cavity.ipynb |
+| 2.14 | Lid-Driven Cavity Flow | ✅ Done | exercise/lid_driven_cavity.ipynb |
 | 2.15 | Flow Over Objects | ⏳ Pending | — |
 | 2.16 | Boundary Conditions | ⏳ Pending | — |
 | — | Module 2 Test | ⏳ Pending | — |
@@ -149,6 +149,9 @@
 | Swapped diffusion numerator terms as "error" | u_{i+1} − 2u_i + u_{i-1} = u_{i-1} − 2u_i + u_{i+1} (commutative, identical) |
 | Missed that central diff for convection is always unstable | Central space for u·∂u/∂x: unconditionally unstable — same as linear advection |
 | Periodic BC: only interior updated, endpoints frozen | Must update ALL points including boundaries (use np.roll, not slicing) |
+| Pinned pressure at corner p[0,0] | Conflicts with two Neumann BCs — pin at interior point p[1,1] instead |
+| More grid points → "smoother" solution | Finer grid = sharper, more accurate features; coarse grid smears peaks |
+| Upwind causes mass loss at sharp gradients | Upwind causes **numerical diffusion** — artificial viscosity proportional to Δx |
 
 ---
 
@@ -160,7 +163,8 @@
 - When confused, re-explain with a different analogy
 - Student asks deep "why" questions — reward and engage them
 - Module 1 Test: **8.5/10 PASS** (19 April 2026)
-- Next session: **Module 2.14 — Lid-Driven Cavity (resume implementation)**
+- Module 2.14: **Complete** (8 May 2026) — Ghia validated, all functions student-written
+- Next session: **Module 2.15 — Flow Over Objects (cylinder flow, drag/lift, von Kármán vortex street)**
 - Watch for: student tends to miss "what happens on the other side" (rarefaction, left flank) — ask explicitly
 - Student writes clean code independently; encourage identifying bugs before running
 - Combined 2D stability: CFL_x + CFL_y + 4r ≤ 1 (student hit instability at r=0.35, learned the hard way)
@@ -192,17 +196,22 @@
 - Why no standalone notebook: projection + SIMPLE require Poisson solver + staggered grid + BCs + validation — all assembled in 2.14
 - ML for α: active research; basic idea not novel but geometry-agnostic RL policy with theoretical guarantees → publishable (Computers & Fluids, JCP)
 
-### 2.14 — Lid-Driven Cavity Flow (In Progress)
+### 2.14 — Lid-Driven Cavity Flow (✅ Complete — 8 May 2026)
 - Setup: square cavity, top wall u=U_lid=1 v=0; all other walls no-slip; no inlet/outlet
 - Primary vortex forms (fluid spins inside); Re=100 → smooth laminar; Re=10000 → secondary corner vortices, potentially unsteady
-- Staggered grid: u,v at cell faces; p at cell centre — prevents checkerboard pressure oscillation
-- Pressure Dirichlet: pin p=0 at ONE interior point (e.g. [1,1]); all walls are Neumann ∂p/∂n=0
-- NumPy matrix convention: row 0 = BOTTOM of domain; top wall = index [-1]; use plt.imshow(..., origin='lower') or np.flipud for correct orientation
-- Student implementing step by step guided by tutor; Jacobi solver for Poisson acceptable for now
-- Validation target: Ghia et al. (1982) benchmark centerline u,v profiles
+- Collocated grid used (not staggered); checkerboard avoided by using consistent 2-cell central stencils for both divergence and pressure gradient
+- Pressure Dirichlet: pin p=0 at ONE interior point p[1,1]; all walls are Neumann ∂p/∂n=0 — student correctly identified this as fixing constant ambiguity in pure-Neumann system
+- Student built all 5 functions independently: apply_boundary_conditions, momentum_predictor, compute_divergence, pressure_poisson_connector (Jacobi), velocity_corrector
+- Key bugs caught by student during code review: p[0,0] corner pin conflict with Neumann BCs → fixed to p[1,1]; rho missing from velocity correction formula
+- Time loop order: BCs → predictor → Poisson (warm start from p_old) → correction → BCs → convergence check
+- Converged at step 1428 (T≈7.9), Re=100, 41×41 grid, safety=0.8, tol=1e-4
+- Validated against Ghia et al. (1982): u-profile (x=0.5) matches well; v-profile (y=0.5) shows ~15% undershoot of trough — attributed to coarse grid + first-order upwind numerical diffusion
+- Iterative solvers: student learned Jacobi (vectorizable, slow), Gauss-Seidel (faster, hard to vectorize), SOR (10-50x faster, optimal ω≈1.8), CG (O(N) for SPD), multigrid (gold standard O(N))
+- Student used max_iter=20000 (brute force); correct pedagogical answer was Option B (relax Poisson tol to 1e-2 for time-marching)
 - Notebook: exercise/lid_driven_cavity.ipynb
 
 ### 2.9 — 2D Scalar Transport
+
 - Extended 1D upwind/diffusion to 2D: independent upwind per direction
 - np.roll needs axis=1 (x) and axis=0 (y) — student initially missed axis argument
 - Safe dt: safety / (u/dx + v/dy + 4α/dx²) — general formula for any grid
