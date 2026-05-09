@@ -38,8 +38,8 @@
 | 2.12 | Pressure-Velocity Coupling | ✅ Done | — |
 | 2.13 | SIMPLE Algorithm | ✅ Done | — |
 | 2.14 | Lid-Driven Cavity Flow | ✅ Done | exercise/lid_driven_cavity.ipynb |
-| 2.15 | Flow Over Objects | ⏳ Pending | — |
-| 2.16 | Boundary Conditions | ⏳ Pending | — |
+| 2.15 | Flow Over Objects | ✅ Done | exercise/cylinder_flow.ipynb |
+| 2.16 | Boundary Conditions | 🔄 In Progress | — |
 | — | Module 2 Test | ⏳ Pending | — |
 
 ### Module 3: Advanced Topics — ⏳ Not Started
