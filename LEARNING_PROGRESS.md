@@ -40,7 +40,7 @@
 | 2.14 | Lid-Driven Cavity Flow | ✅ Done | exercise/lid_driven_cavity.ipynb |
 | 2.15 | Flow Over Objects | ✅ Done | exercise/cylinder_flow.ipynb |
 | 2.16 | Boundary Conditions | ✅ Done | Core CFD Methods/module2_16_boundary_conditions.ipynb, exercise/1d_diffusion_with_ghost_cells.ipynb |
-| — | Module 2 Test | 🔄 In Progress | — |
+| — | Module 2 Test | ✅ Done (10/12 = 83%) | — |
 
 ### Module 3: Advanced Topics — ⏳ Not Started
 - Turbulence, higher-order schemes, multigrid, compressible flow, PINNs
