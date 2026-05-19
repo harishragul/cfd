@@ -42,8 +42,32 @@
 | 2.16 | Boundary Conditions | ✅ Done | Core CFD Methods/module2_16_boundary_conditions.ipynb, exercise/1d_diffusion_with_ghost_cells.ipynb |
 | — | Module 2 Test | ✅ Done (10/12 = 83%) | — |
 
-### Module 3: Advanced Topics — ⏳ Not Started
-- Turbulence, higher-order schemes, multigrid, compressible flow, PINNs
+### Module 3: Advanced Topics — 🔄 In Progress
+| # | Topic | Status | Notebook |
+|---|-------|--------|----------|
+| 3.17 | Turbulence Basics | ✅ Done | Core CFD Methods/module3_17_turbulence_basics.ipynb |
+| 3.18 | Turbulence Models (k-ε, k-ω SST) | ⏳ Pending | — |
+| 3.19 | Mesh Generation | ⏳ Pending | — |
+| 3.20 | Higher-Order Schemes | ⏳ Pending | — |
+| 3.21 | Multigrid Methods | ⏳ Pending | — |
+| 3.22 | Unsteady Flows | ⏳ Pending | — |
+| 3.23 | Compressible Flow | ⏳ Pending | — |
+| 3.24 | Physics-Informed Neural Networks (PINNs) | ⏳ Pending | — |
+| — | Module 3 Test | ⏳ Pending | — |
+
+### 3.17 — Turbulence Basics (Complete)
+- DNS = solving exact NS with grid fine enough to resolve Kolmogorov scale η ~ L·Re^(-3/4); cost ~ Re³ in 3D — infeasible for Re > 10,000
+- Student correctly computed η for Re=1000: η ≈ 0.00562 (Re^(-3/4)) → needs ~178×178 grid in 2D
+- Reynolds decomposition: u = u_bar + u'; avg(u')=0 but avg(u'·v') ≠ 0 (correlation — turbulent momentum transport)
+- u'_rms vs avg(u'): student correctly explained avg(u')=0 always, RMS gives effective fluctuation energy (same as AC voltage concept)
+- RANS equation: new Reynolds stress term -∂(ρ·avg(u'_i·u'_j))/∂x_j appears; 6 extra unknowns with 0 extra equations → closure problem
+- Boussinesq hypothesis: -ρ·avg(u'_i·u'_j) = 2·μ_t·S_bar_ij - (2/3)·ρ·k·δ_ij; reduces 6 unknowns to 1 (ν_t)
+- ν_t vs ν: student correctly identified ν_t is property of the FLOW (not fluid); varies 100-10000× across domain
+- Mixing length model: ν_t = (κ·y)²·|du_bar/dy|, κ=0.41 (von Kármán constant)
+- Log-law of the wall: u⁺ = (1/κ)·ln(y⁺) + B; y⁺<5 viscous sublayer, y⁺>30 log-law, buffer layer 5<y⁺<30
+- Physical reason for viscous sublayer: wall no-penetration kills v' → turbulence suppressed → only molecular viscosity acts
+- Log scale confusion: student initially confused log-law (red, straight on log axis) with linear law (blue, curved on log axis) — clarified log x-axis behavior
+- Notebook: Core CFD Methods/module3_17_turbulence_basics.ipynb
 
 ### Module 4: Projects — ⏳ Not Started
 - Channel flow, heat exchanger, airfoil, turbulent jet
