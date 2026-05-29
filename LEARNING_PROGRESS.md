@@ -9,7 +9,7 @@
 - **FVM:** 3/5 (moderate — implemented full projection method)
 - **Navier-Stokes:** 3/5 (moderate — implemented and validated cavity solver)
 - **Turbulence:** 0/5 (never studied)
-- Existing notebooks (continuity_equation, lid_driven_cavity, flow_over_cylinder) were **code-agent generated**, NOT written by student
+- All exercise notebooks (continuity_equation, lid_driven_cavity, flow_over_cylinder, airfoil sweep, etc.) were **written by the student** in the exercise/ folder
 
 ---
 
