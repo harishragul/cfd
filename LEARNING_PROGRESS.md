@@ -8,7 +8,7 @@
 - **PDEs (math):** 3/5 (moderate)
 - **FVM:** 3/5 (moderate — implemented full projection method)
 - **Navier-Stokes:** 3/5 (moderate — implemented and validated cavity solver)
-- **Turbulence:** 0/5 (never studied)
+- **Turbulence:** 2/5 (understands RANS, mixing-length, k-ε, k-ω SST conceptually + basic implementation)
 - All exercise notebooks (continuity_equation, lid_driven_cavity, flow_over_cylinder, airfoil sweep, etc.) were **written by the student** in the exercise/ folder
 
 ---
@@ -46,7 +46,7 @@
 | # | Topic | Status | Notebook |
 |---|-------|--------|----------|
 | 3.17 | Turbulence Basics | ✅ Done | Core CFD Methods/module3_17_turbulence_basics.ipynb |
-| 3.18 | Turbulence Models (k-ε, k-ω SST) | ⏳ Pending | — |
+| 3.18 | Turbulence Models (k-ε, k-ω SST) | ✅ Done (17/20 = 85%) | Core CFD Methods/module3_18_turbulence_models.ipynb |
 | 3.19 | Mesh Generation | ⏳ Pending | — |
 | 3.20 | Higher-Order Schemes | ⏳ Pending | — |
 | 3.21 | Multigrid Methods | ⏳ Pending | — |
@@ -69,7 +69,24 @@
 - Log scale confusion: student initially confused log-law (red, straight on log axis) with linear law (blue, curved on log axis) — clarified log x-axis behavior
 - Notebook: Core CFD Methods/module3_17_turbulence_basics.ipynb
 
+### 3.18 — Turbulence Models (✅ Complete — 24 May 2026)
+- Mixing-length limitation: model is memoryless — computes ν_t from local shear only; cannot track turbulent energy convected/diffused from upstream (e.g. free jets)
+- k-ε model: 2 transport equations; k = turbulent KE (how much exists), ε = dissipation rate (how fast destroyed)
+- k-ε transport terms: (A) convection Dk/Dt, (B) production P_k = ν_t·|grad(u)|², (C) destruction -ε, (D) diffusion
+- k/ε [seconds] = turbulent time scale — how long an eddy survives; ν_t = C_μ·k²/ε from dimensional analysis
+- k-ε failure near walls: ε = u_τ³/(κy) → ∞ as y→0; no valid wall BC; cannot specify ε = ∞ to solver
+- k-ω SST (Menter 1994): F1=1 near wall → k-ω (well-posed BC); F1=0 free stream → k-ε (free-stream insensitive)
+- SST stress limiter: ν_t = a1·k / max(a1·ω, Ω·F2) — prevents ν_t over-prediction in stagnation regions (cylinder nose, airfoil LE)
+- Spalart-Allmaras: 1-equation model for ν̃; designed for attached BLs; wall distance d hardcoded; used as DES base
+- Turbulent channel flow: Van Driest damping ℓ_m = κy·(1-exp(-y+/26)); Picard iteration for non-linear ν_t; N=500 needed to resolve sublayer (y+ ≈ 0.8 at first cell)
+- Law of the wall confirmed: sublayer u+=y+ for y+<5, log-law u+=(1/κ)ln(y+)+5.2 for y+>30
+- Re_tau scaling: u_tau = sqrt(|dPdx|·H/rho) → 4× dPdx gives 2× Re_tau (square-root relationship)
+- Self-similarity: turbulent profile shape in wall units is universal — same 3 zones at all Re_tau; normalised shape barely changes with Re_tau
+- Mini-quiz: 17/20 (85%) — strong on k-ε transport, SST blending, Re_tau scaling; minor gaps: mixing-length failure reason (missed transport/convection aspect), ε→∞ consequence (no valid BC), self-similarity scope (full profile, not just near-wall)
+- Feynman method introduced this session — student uses it well after 2nd attempt; now standard part of every session
+
 ### Module 4: Projects — ⏳ Not Started
+
 - Channel flow, heat exchanger, airfoil, turbulent jet
 
 ---
@@ -188,7 +205,9 @@
 - Student asks deep "why" questions — reward and engage them
 - Module 1 Test: **8.5/10 PASS** (19 April 2026)
 - Module 2.14: **Complete** (8 May 2026) — Ghia validated, all functions student-written
-- Next session: **Module 2.15 — Flow Over Objects (cylinder flow, drag/lift, von Kármán vortex street)**
+- Module 3.18: **Complete** (24 May 2026) — 17/20 quiz, turbulent channel simulation working
+- Next session: **Module 3.19 — Mesh Generation (structured vs unstructured, quality metrics, y+ estimation)**
+- Teaching method: **Socratic + Feynman every session** — student explicitly requested Feynman method (24 May 2026); ask questions first, then after teaching ask student to explain back in plain words
 - Watch for: student tends to miss "what happens on the other side" (rarefaction, left flank) — ask explicitly
 - Student writes clean code independently; encourage identifying bugs before running
 - Combined 2D stability: CFL_x + CFL_y + 4r ≤ 1 (student hit instability at r=0.35, learned the hard way)
