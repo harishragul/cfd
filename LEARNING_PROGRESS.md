@@ -4,12 +4,45 @@
 > It is read automatically by the CFD Tutor agent at the start of each session.
 
 ## Student Profile
+
 - **Python + NumPy:** 4/5 (strong)
 - **PDEs (math):** 3/5 (moderate)
 - **FVM:** 3/5 (moderate — implemented full projection method)
 - **Navier-Stokes:** 3/5 (moderate — implemented and validated cavity solver)
 - **Turbulence:** 2/5 (understands RANS, mixing-length, k-ε, k-ω SST conceptually + basic implementation)
-- All exercise notebooks (continuity_equation, lid_driven_cavity, flow_over_cylinder, airfoil sweep, etc.) were **written by the student** in the exercise/ folder
+- **Meshing:** 2/5 (understands quality metrics, y+ estimation, geometric/tanh clustering)
+
+### Notebooks written by the STUDENT (exercise/ folder)
+
+| Notebook | Topic |
+| -------- | ----- |
+| exercise/1d_advection.ipynb | 1D linear advection — FTBS, CFL |
+| exercise/1d_diffusion.ipynb | 1D diffusion — explicit/implicit |
+| exercise/1d_diffusion_with_ghost_cells.ipynb | Ghost cell BCs |
+| exercise/1d_invicid_burgers_equation.ipynb | Inviscid Burgers — shock formation |
+| exercise/1d_viscous_burgers_equation.ipynb | Viscous Burgers — shock + diffusion |
+| exercise/2d_scalar_transport.ipynb | 2D advection-diffusion |
+| exercise/fvm_1d_scalar.ipynb | Finite Volume Method — flux balance |
+| exercise/lid_driven_cavity.ipynb | Lid-driven cavity — full SIMPLE solver |
+| exercise/cylinder_flow.ipynb | Flow over cylinder — drag/lift |
+| exercise/flow_over_vertical_plate.ipynb | Vertical plate flow |
+| exercise/mesh_design.ipynb | Mesh design — geometric clustering, y+ |
+
+### Notebooks created by the AI AGENT (reference / teaching material)
+
+| Notebook | Topic | Folder |
+| -------- | ----- | ------ |
+| module1_05_finite_differences.ipynb | FD schemes, order of accuracy | foundations/ |
+| module1_06_1d_advection.ipynb | 1D advection theory + schemes | foundations/ |
+| module1_07_1d_diffusion.ipynb | 1D diffusion — FTCS, BTCS, CN | foundations/ |
+| module1_08_burgers_equation.ipynb | Burgers equation | foundations/ |
+| module1_08b_burgers_gaussian.ipynb | Burgers — Gaussian IC | foundations/ |
+| module1_schemes_comparison.ipynb | All schemes side-by-side | foundations/ |
+| module2_16_boundary_conditions.ipynb | Dirichlet, Neumann, ghost cells | Core CFD Methods/ |
+| module3_17_turbulence_basics.ipynb | RANS, mixing-length, law of wall | Core CFD Methods/ |
+| module3_18_turbulence_models.ipynb | k-ε, k-ω SST, channel flow | Core CFD Methods/ |
+| module3_19_mesh_generation.ipynb | Mesh types (superseded by curriculum) | Core CFD Methods/ |
+| 03_mesh_generation.ipynb | Full mesh generation curriculum | curriculum/module_03_advanced/ |
 
 ---
 
