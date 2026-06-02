@@ -47,7 +47,7 @@
 |---|-------|--------|----------|
 | 3.17 | Turbulence Basics | ✅ Done | Core CFD Methods/module3_17_turbulence_basics.ipynb |
 | 3.18 | Turbulence Models (k-ε, k-ω SST) | ✅ Done (17/20 = 85%) | Core CFD Methods/module3_18_turbulence_models.ipynb |
-| 3.19 | Mesh Generation | ⏳ Pending | — |
+| 3.19 | Mesh Generation | ✅ Done | curriculum/module_03_advanced/03_mesh_generation.ipynb, exercise/mesh_design.ipynb |
 | 3.20 | Higher-Order Schemes | ⏳ Pending | — |
 | 3.21 | Multigrid Methods | ⏳ Pending | — |
 | 3.22 | Unsteady Flows | ⏳ Pending | — |
@@ -84,6 +84,23 @@
 - Self-similarity: turbulent profile shape in wall units is universal — same 3 zones at all Re_tau; normalised shape barely changes with Re_tau
 - Mini-quiz: 17/20 (85%) — strong on k-ε transport, SST blending, Re_tau scaling; minor gaps: mixing-length failure reason (missed transport/convection aspect), ε→∞ consequence (no valid BC), self-similarity scope (full profile, not just near-wall)
 - Feynman method introduced this session — student uses it well after 2nd attempt; now standard part of every session
+
+### 3.19 — Mesh Generation (✅ Complete — 2 Jun 2026)
+
+- Structured mesh: regular i-j indexing, cache-friendly, hard for complex geometry
+- Unstructured mesh: connectivity table, fits any geometry, slower random access
+- Hybrid mesh: structured prism layers near wall (y+ control) + unstructured bulk — industry standard
+- 4 quality metrics: skewness (<0.85), aspect ratio (<5 bulk, <100 BL aligned), non-orthogonality (<70°), expansion ratio (<1.2)
+- y+ estimation workflow: Re → Cf (empirical) → tau_w → u_tau → y1 = y+_target * nu / u_tau
+- Flat plate: Cf = 0.027*Re^(-1/7); Pipe/channel: Cf = 0.079*Re^(-1/4) (Blasius)
+- L = hydraulic diameter D_h = 2*gap = 4H for parallel plates with half-height H
+- Geometric clustering: dy_i = dy_0 * r^i — accumulate to get node positions; graded_mesh() function
+- Tanh stretching: y_i = H*(1 - tanh(s*(1-xi))/tanh(s)) — smooth, single parameter s
+- Expansion ratio exactly 1.15 throughout; last cell clipping artifact (r=0.98) when forcing y[-1]=H exactly
+- Exercise result: 40 geometric cells (r=1.15) vs 500 uniform cells for same y+≈1 — 12.5× fewer
+- Feynman explanation: uniform wastes cells in flat core; geometric grows cells away from wall so fewer needed
+- Common mistake: said cells "reduce size" away from wall — corrected to cells GROW (coarser) away from wall
+- Notebook: curriculum/module_03_advanced/03_mesh_generation.ipynb; exercise: exercise/mesh_design.ipynb
 
 ### Module 4: Projects — ⏳ Not Started
 
