@@ -14,6 +14,13 @@ I'm sharing it publicly so other self-learners can follow the same path without 
 
 The entire course was built with the help of a [Claude Code](https://claude.ai/code) AI agent acting as an interactive CFD tutor — asking me questions before explaining, making me implement each concept before moving on, and catching my mistakes along the way. The Socratic + Feynman approach it follows is baked into how each notebook is structured.
 
+**What the AI agent made vs. what I made:**
+
+- `foundations/`, `Core CFD Methods/`, `curriculum/` — curriculum notebooks and teaching notes written by the Claude Code agent. These contain theory, derivations, and worked examples.
+- `exercise/` — **written entirely by me**. Every solver, every function, every line of code in this folder is my own implementation, written during the lesson after learning the concept. The agent only asked the questions; I wrote the code.
+
+Think of it this way: the agent is the textbook and the professor, `exercise/` is my homework.
+
 ---
 
 ## Who this is for
