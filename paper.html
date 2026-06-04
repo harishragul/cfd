@@ -1,0 +1,174 @@
+<h1 id="summary">Summary</h1>
+<p><em>CFD from Scratch</em> is an open-source, self-paced learning
+module that guides students through Computational Fluid Dynamics (CFD)
+from first principles using Python and Jupyter notebooks. Starting from
+the definition of a finite difference and ending with industrial
+turbulence models (k-ε and k-ω SST), the course is structured around a
+write-it-yourself pedagogy: every numerical method is derived, then
+immediately implemented by the learner in a paired exercise
+notebook.</p>
+<p>The module spans four progressively deeper areas: (1) numerical
+foundations — finite differences, 1D advection, diffusion, and Burgers’
+equation; (2) core CFD methods — 2D scalar transport, the Finite Volume
+Method, incompressible Navier-Stokes, pressure-velocity coupling, and
+the SIMPLE algorithm; (3) advanced topics — RANS turbulence modeling,
+k-ε, k-ω SST, and mesh generation; and (4) project-scale simulations —
+channel flow, heat exchangers, airfoils, and turbulent jets. The
+lid-driven cavity solver is validated against the Ghia et al. benchmark
+<span class="citation" data-cites="ghia1982">(Ghia et al.
+1982)</span>.</p>
+<p>All content is hosted at <a
+href="https://github.com/harishragul/cfd">github.com/harishragul/cfd</a>
+under the MIT license and developed in the open as an ongoing learning
+record.</p>
+<h1 id="statement-of-need">Statement of Need</h1>
+<p>Learners who want to understand what a CFD solver actually does — not
+just how to run one — face a gap in available resources. Introductory
+courses teach fluid mechanics theory; commercial training teaches
+software operation. Resources that build solvers from scratch, such as
+the widely-used <em>CFD Python</em> <span class="citation"
+data-cites="barba2018">(Barba and Forsyth 2018)</span>, cover the
+foundational 12 steps through basic Navier-Stokes but stop before
+turbulence modeling, which is where nearly all real-world engineering
+CFD begins.</p>
+<p>This module fills that gap. It takes a learner from their first
+finite difference stencil all the way to implementing k-ω SST <span
+class="citation" data-cites="menter1994">(Menter 1994)</span> — the
+turbulence model used by default in OpenFOAM, Fluent, and Star-CCM+ —
+without ever using a black-box solver. Every discretization, every
+boundary condition, and every iterative pressure correction is written
+by the learner in NumPy.</p>
+<p>The course is particularly suited to:</p>
+<ul>
+<li>Engineering graduates preparing for research or industry CFD work
+who want conceptual depth beyond software familiarity</li>
+<li>Students in numerical methods or fluid mechanics courses seeking a
+coding companion</li>
+<li>Self-directed learners who learn by building rather than
+reading</li>
+</ul>
+<h1 id="learning-objectives">Learning Objectives</h1>
+<p>By completing this module, students will be able to:</p>
+<ol type="1">
+<li>Derive finite difference approximations and verify their order of
+accuracy using convergence plots</li>
+<li>Implement and stability-analyze explicit and implicit
+time-integration schemes for advection and diffusion</li>
+<li>Explain the CFL condition and von Neumann stability criterion and
+apply them to choose time steps</li>
+<li>Implement the Finite Volume Method with exact flux conservation and
+verify mass conservation numerically</li>
+<li>Write a pressure-velocity coupled Navier-Stokes solver using the
+projection method and SIMPLE algorithm</li>
+<li>Validate a CFD solver against a published benchmark (Ghia et al.,
+1982)</li>
+<li>Explain the closure problem in turbulent flow and implement
+mixing-length, k-ε, and k-ω SST models</li>
+<li>Design a wall-resolved mesh using y⁺ estimation and geometric
+clustering</li>
+</ol>
+<h1 id="instructional-design">Instructional Design</h1>
+<p>The module applies two complementary pedagogical strategies
+throughout.</p>
+<p><strong>Socratic sequencing.</strong> Each topic opens with a
+question the student is expected to answer from physical intuition
+before any equation is introduced. For example, the advection module
+begins: <em>“If information travels rightward, which neighboring cell
+should you look at to estimate the flux?”</em> This question-first
+structure is implemented in the reference notebooks as guided discovery
+rather than exposition.</p>
+<p><strong>Feynman paired exercises.</strong> After each reference
+notebook explains a concept, the student opens a paired exercise
+notebook in the <code>exercise/</code> folder and implements the method
+independently. The exercise notebooks provide function signatures and
+docstrings; all numerical content is written by the student. This
+mirrors the Feynman technique: understanding is demonstrated by being
+able to reconstruct the result, not by being able to follow it.</p>
+<p>The content ordering follows a physical-to-numerical progression:
+physical analogy → governing equation → discretization → implementation
+→ validation. This sequence was found to be more effective for building
+robust mental models than leading with the mathematics <span
+class="citation" data-cites="ferziger2020">(Ferziger et al.
+2020)</span>.</p>
+<p>The reference notebooks in <code>curriculum/</code> were generated by
+an AI tutor (Claude Code) acting as an interactive Socratic instructor,
+asking questions before explaining and correcting mistakes without
+giving away answers. The exercise notebooks in <code>exercise/</code>
+are the student’s own implementations, written during those
+sessions.</p>
+<h1 id="content-description">Content Description</h1>
+<p>The module is organized into four directories:</p>
+<ul>
+<li><strong><code>curriculum/module_01_foundations/</code></strong> (8
+notebooks): finite differences, 1D linear advection, 1D diffusion
+(explicit FTCS, implicit BTCS, Crank-Nicolson), and Burgers’
+equation</li>
+<li><strong><code>curriculum/module_02_core_methods/</code></strong> (8
+notebooks): 2D scalar transport, Finite Volume Method, incompressible
+Navier-Stokes, pressure-velocity coupling, the SIMPLE algorithm <span
+class="citation" data-cites="patankar1980">(Patankar 1980)</span>,
+lid-driven cavity, flow over a cylinder, and boundary conditions</li>
+<li><strong><code>curriculum/module_03_advanced/</code></strong> (8
+notebooks): RANS equations, mixing-length model, k-ε model, k-ω SST,
+mesh generation (structured, unstructured, hybrid), higher-order
+schemes, multigrid methods, unsteady flows, compressible flow, and
+Physics-Informed Neural Networks</li>
+<li><strong><code>exercise/</code></strong> (13 notebooks): student
+implementations of all major solvers, from 1D advection through the full
+lid-driven cavity SIMPLE solver and turbulent channel flow mesh
+design</li>
+</ul>
+<p>The lid-driven cavity solver (41×41 grid, Re = 100) converges in
+approximately 610 time steps and produces u- and v-velocity profiles
+that agree well with Ghia et al. <span class="citation"
+data-cites="ghia1982">(Ghia et al. 1982)</span>, as shown in
+<code>results/ghia_validation.png</code>.</p>
+<h1 id="evidence-of-use">Evidence of Use</h1>
+<p>This module was used by the author as their primary self-study
+resource for CFD over a period of approximately three months (March–June
+2026). Learning progress, quiz results, and common misconceptions are
+documented in <code>LEARNING_PROGRESS.md</code>, which serves as a
+detailed record of the learning trajectory. Module assessments
+(multiple-choice and implementation quizzes) were administered after
+each module: Module 1 — 8.5/10; Module 2 — 10/12 (83%); Module 3
+(partial) — turbulence models 17/20 (85%). The module is actively shared
+publicly for adoption by other self-directed learners.</p>
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>The reference notebooks and teaching protocol were developed with the
+assistance of the Claude Code AI agent (Anthropic), which acted as an
+interactive Socratic tutor throughout the course. All solver
+implementations in the <code>exercise/</code> folder were written
+independently by the author.</p>
+<h1 class="unnumbered" id="references">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-barba2018" class="csl-entry" role="listitem">
+Barba, Lorena A., and Gilbert F. Forsyth. 2018. <span>“<span>CFD</span>
+<span>Python</span>: The 12 Steps to <span>Navier-Stokes</span>
+Equations.”</span> <em>Journal of Open Source Education</em> 2 (16): 21.
+<a
+href="https://doi.org/10.21105/jose.00021">https://doi.org/10.21105/jose.00021</a>.
+</div>
+<div id="ref-ferziger2020" class="csl-entry" role="listitem">
+Ferziger, Joel H., Milovan Perić, and Robert L. Street. 2020.
+<em>Computational Methods for Fluid Dynamics</em>. 4th ed. Springer. <a
+href="https://doi.org/10.1007/978-3-319-99693-6">https://doi.org/10.1007/978-3-319-99693-6</a>.
+</div>
+<div id="ref-ghia1982" class="csl-entry" role="listitem">
+Ghia, U., K. N. Ghia, and C. T. Shin. 1982. <span>“High-<span>Re</span>
+Solutions for Incompressible Flow Using the <span>Navier-Stokes</span>
+Equations and a Multigrid Method.”</span> <em>Journal of Computational
+Physics</em> 48 (3): 387–411. <a
+href="https://doi.org/10.1016/0021-9991(82)90058-4">https://doi.org/10.1016/0021-9991(82)90058-4</a>.
+</div>
+<div id="ref-menter1994" class="csl-entry" role="listitem">
+Menter, Florian R. 1994. <span>“Two-Equation Eddy-Viscosity Turbulence
+Models for Engineering Applications.”</span> <em>AIAA Journal</em> 32
+(8): 1598–605. <a
+href="https://doi.org/10.2514/3.12149">https://doi.org/10.2514/3.12149</a>.
+</div>
+<div id="ref-patankar1980" class="csl-entry" role="listitem">
+Patankar, Suhas V. 1980. <em>Numerical Heat Transfer and Fluid
+Flow</em>. Hemisphere Publishing Corporation.
+</div>
+</div>

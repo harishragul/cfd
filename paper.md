@@ -23,13 +23,13 @@ bibliography: paper.bib
 *CFD from Scratch* is an open-source, self-paced learning module that guides students through
 Computational Fluid Dynamics (CFD) from first principles using Python and Jupyter notebooks.
 Starting from the definition of a finite difference and ending with industrial turbulence models
-(k-ε and k-ω SST), the course is structured around a write-it-yourself pedagogy: every numerical
+(k-epsilon and k-omega SST), the course is structured around a write-it-yourself pedagogy: every numerical
 method is derived, then immediately implemented by the learner in a paired exercise notebook.
 
 The module spans four progressively deeper areas: (1) numerical foundations — finite differences,
 1D advection, diffusion, and Burgers' equation; (2) core CFD methods — 2D scalar transport, the
 Finite Volume Method, incompressible Navier-Stokes, pressure-velocity coupling, and the SIMPLE
-algorithm; (3) advanced topics — RANS turbulence modeling, k-ε, k-ω SST, and mesh generation;
+algorithm; (3) advanced topics — RANS turbulence modeling, k-epsilon, k-omega SST, and mesh generation;
 and (4) project-scale simulations — channel flow, heat exchangers, airfoils, and turbulent jets.
 The lid-driven cavity solver is validated against the Ghia et al. benchmark [@ghia1982].
 
@@ -46,7 +46,7 @@ Navier-Stokes but stop before turbulence modeling, which is where nearly all rea
 engineering CFD begins.
 
 This module fills that gap. It takes a learner from their first finite difference stencil all the
-way to implementing k-ω SST [@menter1994] — the turbulence model used by default in OpenFOAM,
+way to implementing k-omega SST [@menter1994] — the turbulence model used by default in OpenFOAM,
 Fluent, and Star-CCM+ — without ever using a black-box solver. Every discretization, every
 boundary condition, and every iterative pressure correction is written by the learner in NumPy.
 
@@ -67,8 +67,8 @@ By completing this module, students will be able to:
 4. Implement the Finite Volume Method with exact flux conservation and verify mass conservation numerically
 5. Write a pressure-velocity coupled Navier-Stokes solver using the projection method and SIMPLE algorithm
 6. Validate a CFD solver against a published benchmark (Ghia et al., 1982)
-7. Explain the closure problem in turbulent flow and implement mixing-length, k-ε, and k-ω SST models
-8. Design a wall-resolved mesh using y⁺ estimation and geometric clustering
+7. Explain the closure problem in turbulent flow and implement mixing-length, k-epsilon, and k-omega SST models
+8. Design a wall-resolved mesh using y+ estimation and geometric clustering
 
 # Instructional Design
 
@@ -105,7 +105,7 @@ The module is organized into four directories:
   Method, incompressible Navier-Stokes, pressure-velocity coupling, the SIMPLE algorithm
   [@patankar1980], lid-driven cavity, flow over a cylinder, and boundary conditions
 - **`curriculum/module_03_advanced/`** (8 notebooks): RANS equations, mixing-length model,
-  k-ε model, k-ω SST, mesh generation (structured, unstructured, hybrid), higher-order schemes,
+  k-epsilon model, k-omega SST, mesh generation (structured, unstructured, hybrid), higher-order schemes,
   multigrid methods, unsteady flows, compressible flow, and Physics-Informed Neural Networks
 - **`exercise/`** (13 notebooks): student implementations of all major solvers, from 1D advection
   through the full lid-driven cavity SIMPLE solver and turbulent channel flow mesh design
