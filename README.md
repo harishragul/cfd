@@ -16,7 +16,7 @@ The entire course was built with the help of a [Claude Code](https://claude.ai/c
 
 **What the AI agent made vs. what I made:**
 
-- `foundations/`, `Core CFD Methods/`, `curriculum/` — curriculum notebooks and teaching notes written by the Claude Code agent. These contain theory, derivations, and worked examples.
+- `curriculum/` — curriculum notebooks and teaching notes written by the Claude Code agent. These contain theory, derivations, and worked examples.
 - `exercise/` — **written entirely by me**. Every solver, every function, every line of code in this folder is my own implementation, written during the lesson after learning the concept. The agent only asked the questions; I wrote the code.
 
 Think of it this way: the agent is the textbook and the professor, `exercise/` is my homework.
@@ -58,52 +58,89 @@ By the end of this course you will have implemented, from scratch:
 
 ## Curriculum
 
+---
+
 ### Module 1 — Foundations
 
-| Notebook | Topic |
-|----------|-------|
-| [foundations/module1_05_finite_differences.ipynb](foundations/module1_05_finite_differences.ipynb) | Finite difference schemes, order of accuracy, convergence plots |
-| [foundations/module1_06_1d_advection.ipynb](foundations/module1_06_1d_advection.ipynb) | 1D linear advection — FTBS, CFL, upwinding, periodic BCs |
-| [foundations/module1_07_1d_diffusion.ipynb](foundations/module1_07_1d_diffusion.ipynb) | 1D diffusion — explicit FTCS, implicit BTCS, Crank-Nicolson |
-| [foundations/module1_08_burgers_equation.ipynb](foundations/module1_08_burgers_equation.ipynb) | Burgers' equation — shock formation, viscous vs inviscid |
-| [foundations/module1_08b_burgers_gaussian.ipynb](foundations/module1_08b_burgers_gaussian.ipynb) | Burgers' — Gaussian initial condition, adaptive time-stepping |
-| [foundations/module1_schemes_comparison.ipynb](foundations/module1_schemes_comparison.ipynb) | All four scheme combinations side-by-side |
+**Reference notebooks** (written by the AI tutor):
 
-**Exercises written in `exercise/`:**
-- [exercise/1d_advection.ipynb](exercise/1d_advection.ipynb)
-- [exercise/1d_diffusion.ipynb](exercise/1d_diffusion.ipynb)
-- [exercise/1d_diffusion_with_ghost_cells.ipynb](exercise/1d_diffusion_with_ghost_cells.ipynb)
-- [exercise/1d_invicid_burgers_equation.ipynb](exercise/1d_invicid_burgers_equation.ipynb)
-- [exercise/1d_viscous_burgers_equation.ipynb](exercise/1d_viscous_burgers_equation.ipynb)
+| Notebook | Topic |
+| -------- | ----- |
+| [curriculum/module_01_foundations/01_what_is_cfd.ipynb](curriculum/module_01_foundations/01_what_is_cfd.ipynb) | What is CFD — discretization, grids, cost vs accuracy |
+| [curriculum/module_01_foundations/02_python_for_cfd.ipynb](curriculum/module_01_foundations/02_python_for_cfd.ipynb) | Python and NumPy for CFD |
+| [curriculum/module_01_foundations/03_conservation_laws.ipynb](curriculum/module_01_foundations/03_conservation_laws.ipynb) | Conservation laws — mass, momentum, energy |
+| [curriculum/module_01_foundations/04_continuity_equation.ipynb](curriculum/module_01_foundations/04_continuity_equation.ipynb) | Continuity equation, incompressible flow |
+| [curriculum/module_01_foundations/05_finite_difference_method.ipynb](curriculum/module_01_foundations/05_finite_difference_method.ipynb) | Finite difference schemes, order of accuracy, convergence |
+| [curriculum/module_01_foundations/06_1d_linear_advection.ipynb](curriculum/module_01_foundations/06_1d_linear_advection.ipynb) | 1D linear advection — FTBS, CFL, upwinding, periodic BCs |
+| [curriculum/module_01_foundations/07_1d_diffusion_equation.ipynb](curriculum/module_01_foundations/07_1d_diffusion_equation.ipynb) | 1D diffusion — explicit FTCS, implicit BTCS, Crank-Nicolson |
+| [curriculum/module_01_foundations/08_1d_burgers_equation.ipynb](curriculum/module_01_foundations/08_1d_burgers_equation.ipynb) | Burgers' equation — shock formation, viscous vs inviscid |
+
+**My exercises** (written by me):
+
+- [exercise/1d_advection.ipynb](exercise/1d_advection.ipynb) — 1D linear advection, FTBS, CFL
+- [exercise/1d_diffusion.ipynb](exercise/1d_diffusion.ipynb) — explicit and implicit diffusion schemes
+- [exercise/1d_diffusion_with_ghost_cells.ipynb](exercise/1d_diffusion_with_ghost_cells.ipynb) — ghost cell boundary conditions
+- [exercise/1d_invicid_burgers_equation.ipynb](exercise/1d_invicid_burgers_equation.ipynb) — inviscid Burgers, shock formation
+- [exercise/1d_viscous_burgers_equation.ipynb](exercise/1d_viscous_burgers_equation.ipynb) — viscous Burgers, shock + diffusion
 
 ---
 
 ### Module 2 — Core CFD Methods
 
+**Reference notebooks** (written by the AI tutor):
+
 | Notebook | Topic |
-|----------|-------|
-| [exercise/2d_scalar_transport.ipynb](exercise/2d_scalar_transport.ipynb) | 2D advection-diffusion, multi-dimensional stability |
-| [exercise/fvm_1d_scalar.ipynb](exercise/fvm_1d_scalar.ipynb) | Finite Volume Method — flux balance, exact mass conservation |
-| [exercise/lid_driven_cavity.ipynb](exercise/lid_driven_cavity.ipynb) | Full SIMPLE solver — Navier-Stokes, projection, Ghia validation |
-| [exercise/cylinder_flow.ipynb](exercise/cylinder_flow.ipynb) | Flow over a cylinder — drag, lift, vortex shedding |
-| [exercise/flow_over_vertical_plate.ipynb](exercise/flow_over_vertical_plate.ipynb) | Vertical plate flow |
-| [Core CFD Methods/module2_16_boundary_conditions.ipynb](Core%20CFD%20Methods/module2_16_boundary_conditions.ipynb) | Dirichlet, Neumann, ghost cells — theory and implementation |
+| -------- | ----- |
+| [curriculum/module_02_core_methods/01_2d_scalar_transport.ipynb](curriculum/module_02_core_methods/01_2d_scalar_transport.ipynb) | 2D advection-diffusion, multi-dimensional stability |
+| [curriculum/module_02_core_methods/02_finite_volume_method.ipynb](curriculum/module_02_core_methods/02_finite_volume_method.ipynb) | Finite Volume Method — flux balance, mass conservation |
+| [curriculum/module_02_core_methods/03_navier_stokes_equations.ipynb](curriculum/module_02_core_methods/03_navier_stokes_equations.ipynb) | Navier-Stokes equations — derivation, non-dimensionalization |
+| [curriculum/module_02_core_methods/04_pressure_velocity_coupling.ipynb](curriculum/module_02_core_methods/04_pressure_velocity_coupling.ipynb) | Pressure-velocity coupling, projection method |
+| [curriculum/module_02_core_methods/05_simple_algorithm.ipynb](curriculum/module_02_core_methods/05_simple_algorithm.ipynb) | SIMPLE algorithm — pressure correction, under-relaxation |
+| [curriculum/module_02_core_methods/06_lid_driven_cavity.ipynb](curriculum/module_02_core_methods/06_lid_driven_cavity.ipynb) | Lid-driven cavity — theory and Ghia benchmark |
+| [curriculum/module_02_core_methods/07_flow_over_cylinder.ipynb](curriculum/module_02_core_methods/07_flow_over_cylinder.ipynb) | Flow over a cylinder — drag, lift, vortex shedding |
+| [curriculum/module_02_core_methods/08_boundary_conditions.ipynb](curriculum/module_02_core_methods/08_boundary_conditions.ipynb) | Dirichlet, Neumann, ghost cells |
+
+**My exercises** (written by me):
+
+- [exercise/2d_scalar_transport.ipynb](exercise/2d_scalar_transport.ipynb) — 2D advection-diffusion, multi-dimensional stability
+- [exercise/fvm_1d_scalar.ipynb](exercise/fvm_1d_scalar.ipynb) — FVM flux balance, exact mass conservation
+- [exercise/lid_driven_cavity.ipynb](exercise/lid_driven_cavity.ipynb) — full SIMPLE solver, Ghia et al. validated
+- [exercise/cylinder_flow.ipynb](exercise/cylinder_flow.ipynb) — flow over a cylinder, drag and lift
+- [exercise/flow_over_vertical_plate.ipynb](exercise/flow_over_vertical_plate.ipynb) — flow over a vertical plate
+- [exercise/airfoil_flow.ipynb](exercise/airfoil_flow.ipynb) — airfoil flow simulation
+- [exercise/airfoil_aoa_sweep_colab.ipynb](exercise/airfoil_aoa_sweep_colab.ipynb) — angle-of-attack sweep (Colab-ready)
 
 ---
 
 ### Module 3 — Turbulence and Meshing
 
+**Reference notebooks** (written by the AI tutor):
+
 | Notebook | Topic |
-|----------|-------|
-| [Core CFD Methods/module3_17_turbulence_basics.ipynb](Core%20CFD%20Methods/module3_17_turbulence_basics.ipynb) | RANS, Reynolds decomposition, mixing-length, law of the wall |
-| [Core CFD Methods/module3_18_turbulence_models.ipynb](Core%20CFD%20Methods/module3_18_turbulence_models.ipynb) | k-ε, k-ω SST, turbulent channel flow simulation |
-| [exercise/mesh_design.ipynb](exercise/mesh_design.ipynb) | y⁺ estimation, geometric clustering, tanh stretching |
+| -------- | ----- |
+| [curriculum/module_03_advanced/01_turbulence_basics.ipynb](curriculum/module_03_advanced/01_turbulence_basics.ipynb) | RANS, Reynolds decomposition, mixing-length, law of the wall |
+| [curriculum/module_03_advanced/02_turbulence_models.ipynb](curriculum/module_03_advanced/02_turbulence_models.ipynb) | k-ε, k-ω SST, turbulent channel flow simulation |
+| [curriculum/module_03_advanced/03_mesh_generation.ipynb](curriculum/module_03_advanced/03_mesh_generation.ipynb) | Mesh types — structured, unstructured, hybrid, y⁺ |
+| [curriculum/module_03_advanced/04_higher_order_schemes.ipynb](curriculum/module_03_advanced/04_higher_order_schemes.ipynb) | Higher-order schemes — QUICK, ENO, WENO |
+| [curriculum/module_03_advanced/05_multigrid_methods.ipynb](curriculum/module_03_advanced/05_multigrid_methods.ipynb) | Multigrid methods — V-cycle, smoothers |
+| [curriculum/module_03_advanced/06_unsteady_flows.ipynb](curriculum/module_03_advanced/06_unsteady_flows.ipynb) | Unsteady flows — time accuracy, dual time-stepping |
+| [curriculum/module_03_advanced/07_compressible_flow.ipynb](curriculum/module_03_advanced/07_compressible_flow.ipynb) | Compressible flow — shocks, Euler equations |
+| [curriculum/module_03_advanced/08_pinns.ipynb](curriculum/module_03_advanced/08_pinns.ipynb) | Physics-Informed Neural Networks (PINNs) |
+
+**My exercises** (written by me):
+
+- [exercise/mesh_design.ipynb](exercise/mesh_design.ipynb) — y⁺ estimation, geometric clustering, tanh stretching
 
 ---
 
 ### Module 4 — Projects (coming)
 
-Channel flow, heat exchanger, airfoil aerodynamics, turbulent jet.
+| Notebook | Topic |
+| -------- | ----- |
+| [curriculum/module_04_projects/01_channel_flow.ipynb](curriculum/module_04_projects/01_channel_flow.ipynb) | Turbulent channel flow |
+| [curriculum/module_04_projects/02_heat_exchanger.ipynb](curriculum/module_04_projects/02_heat_exchanger.ipynb) | Heat exchanger simulation |
+| [curriculum/module_04_projects/03_airfoil_simulation.ipynb](curriculum/module_04_projects/03_airfoil_simulation.ipynb) | Airfoil aerodynamics |
+| [curriculum/module_04_projects/04_turbulent_jet.ipynb](curriculum/module_04_projects/04_turbulent_jet.ipynb) | Turbulent jet |
 
 ---
 
@@ -111,14 +148,14 @@ Channel flow, heat exchanger, airfoil aerodynamics, turbulent jet.
 
 **Recommended path:**
 
-1. Read a reference notebook in `foundations/` or `Core CFD Methods/` — these explain the theory.
+1. Read a reference notebook in `curriculum/` — these explain the theory.
 2. Open the matching exercise notebook in `exercise/` and implement it yourself.
 3. The exercise notebooks have the structure and comments; the implementation cells are yours to fill.
 
 **Learning order:**
 
 ```
-Module 1 (foundations/) → Module 2 (exercise/ + Core CFD Methods/) → Module 3 (Core CFD Methods/)
+Module 1 (curriculum/module_01_foundations/) → Module 2 (curriculum/module_02_core_methods/) → Module 3 (curriculum/module_03_advanced/)
 ```
 
 You can also jump to any topic if you already know the prerequisites.
