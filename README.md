@@ -80,7 +80,7 @@ By the end of this course you will have implemented, from scratch:
 - [exercise/1d_advection.ipynb](exercise/1d_advection.ipynb) — 1D linear advection, FTBS, CFL
 - [exercise/1d_diffusion.ipynb](exercise/1d_diffusion.ipynb) — explicit and implicit diffusion schemes
 - [exercise/1d_diffusion_with_ghost_cells.ipynb](exercise/1d_diffusion_with_ghost_cells.ipynb) — ghost cell boundary conditions
-- [exercise/1d_invicid_burgers_equation.ipynb](exercise/1d_invicid_burgers_equation.ipynb) — inviscid Burgers, shock formation *(note: filename has a typo — "invicid" should be "inviscid")*
+- [exercise/1d_inviscid_burgers_equation.ipynb](exercise/1d_inviscid_burgers_equation.ipynb) — inviscid Burgers, shock formation
 - [exercise/1d_viscous_burgers_equation.ipynb](exercise/1d_viscous_burgers_equation.ipynb) — viscous Burgers, shock + diffusion
 
 ---
