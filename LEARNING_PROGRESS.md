@@ -38,6 +38,7 @@
 | exercise/cylinder_flow.ipynb | Flow over cylinder — drag/lift |
 | exercise/flow_over_vertical_plate.ipynb | Vertical plate flow |
 | exercise/mesh_design.ipynb | Mesh design — geometric clustering, y+ |
+| exercise/higher_order_schemes.ipynb | TVD advection — minmod, van Leer, superbee, MC limiters |
 
 ### Created by the AI AGENT (reference / teaching material)
 
@@ -94,7 +95,7 @@
 | 3.17 | Turbulence Basics | ✅ Done | Core CFD Methods/module3_17_turbulence_basics.ipynb |
 | 3.18 | Turbulence Models | ✅ Done (17/20 = 85%) | Core CFD Methods/module3_18_turbulence_models.ipynb |
 | 3.19 | Mesh Generation | ✅ Done | curriculum/module_03_advanced/03_mesh_generation.ipynb |
-| **3.20** | **Higher-Order Schemes** | **🔄 In Progress** | — |
+| 3.20 | Higher-Order Schemes | ✅ Done | curriculum/module_03_advanced/04_higher_order_schemes.ipynb, exercise/higher_order_schemes.ipynb |
 | 3.21 | Multigrid Methods | ⏳ Pending | — |
 | 3.22 | Unsteady Flows | ⏳ Pending | — |
 | 3.23 | Compressible Flow | ⏳ Pending | — |
@@ -219,6 +220,30 @@
 - Re_tau scaling: u_tau = sqrt(|dPdx|·H/ρ) → 4× dPdx gives 2× Re_tau (square-root relationship)
 - Minor quiz gaps: mixing-length failure reason (missed transport aspect), ε→∞ consequence (no valid BC)
 - Notebook: Core CFD Methods/module3_18_turbulence_models.ipynb
+
+### 3.20 — Higher-Order Schemes (✅ Complete — 9 Jun 2026)
+
+- Godunov's theorem: no linear scheme can be both 2nd-order accurate AND TVD — limiter must be nonlinear
+- Numerical diffusion (upwind): extra ∂²u/∂x² term smears features; vanishes at CFL=1
+- Numerical dispersion (Lax-Wendroff): extra ∂³u/∂x³ term causes oscillations behind discontinuities
+- Photo analogy: diffusion = Gaussian blur (soft edges); dispersion = over-sharpening halo artifact
+- Total Variation: TV = sum of |u_{i+1} - u_i| — hiking trail elevation (total ups+downs, not net)
+- TVD guarantee: scheme cannot create new extrema not in the initial condition
+- Gradient ratio: r = (φ_P - φ_W)/(φ_E - φ_P) compares gradient behind vs ahead of cell P
+  - r ≈ 1: smooth region (both gradients equal) → ψ = 1 → full 2nd-order correction
+  - r < 0: local extremum (sign flip) → ψ = 0 → pure 1st-order upwind
+  - r → 0: sudden steepening ahead → ψ → 0 → pure 1st-order upwind
+- Limiter analogy: adaptive cruise control — brakes hard near sharp bends (r < 1), full speed on straight road (r ≈ 1)
+- Limiters: minmod (safest), van Leer (smooth balance), superbee (sharpest), MC (general purpose)
+- QUICK: 3rd-order, φ_e = (6/8)φ_P + (3/8)φ_E − (1/8)φ_W; not TVD; uses downstream cell
+- MUSCL: FVM-native TVD — reconstruct slope Δ_P inside each cell, limited by minmod/van Leer/etc
+- TVD vs MUSCL: same accuracy/TVD guarantee; TVD acts per-face (FD), MUSCL acts per-cell (FVM)
+- Student Feynman gaps corrected: ψ=0 means sharp region (NOT smooth); r<0 and r→0 are distinct cases
+- Exercise: implemented 4 TVD solvers on step IC; L2 errors: upwind 0.182 > minmod 0.137 > MC 0.129 > van Leer 0.132 > superbee 0.125
+- Superbee wins on step function (sharpest); would lose on smooth Gaussian (over-compressive)
+- Minmod chosen when safety > accuracy (near shocks in complex flows); superbee for preserving sharp fronts
+- Bug caught by instructor: MC formula had min cap at 1 instead of 2 (affects r > 1 regime)
+- Notebooks: curriculum/module_03_advanced/04_higher_order_schemes.ipynb + exercise/higher_order_schemes.ipynb
 
 ### 3.19 — Mesh Generation (✅ Complete — 2 Jun 2026)
 - Structured: regular i-j indexing, cache-friendly, hard for complex geometry

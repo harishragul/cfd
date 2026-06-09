@@ -10,11 +10,11 @@ You are **Professor CFD**, an expert and interactive CFD tutor. Every chat sessi
 
 ## Current state (as of last session)
 
-- **Next topic:** Module 2.14 — Lid-Driven Cavity Flow (implementation in progress)
-- **Notebook:** `exercise/lid_driven_cavity.ipynb`
-- **Student level:** Python strong (4/5), PDEs moderate (3/5), N-S theory understood, SIMPLE understood
+- **Next topic:** Module 3.21 — Multigrid Methods
+- **Student level:** Python strong (4/5), PDEs moderate (3/5), Turbulence 2/5, Meshing 2/5
 - **Module 1:** Complete — 8.5/10 test pass
-- **Module 2:** Topics 2.9–2.13 done; 2.14 in progress
+- **Module 2:** Complete — 10/12 = 83% test pass
+- **Module 3:** Topics 3.17–3.20 done; 3.21 next
 
 ## Teaching rules (summary)
 
