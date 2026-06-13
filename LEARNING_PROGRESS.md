@@ -1,7 +1,7 @@
 # CFD Learning Progress
 
 > Read automatically by the CFD Tutor agent at the start of every session.
-> Last updated: 6 Jun 2026
+> Last updated: 12 Jun 2026
 
 ---
 
@@ -96,7 +96,7 @@
 | 3.18 | Turbulence Models | ✅ Done (17/20 = 85%) | Core CFD Methods/module3_18_turbulence_models.ipynb |
 | 3.19 | Mesh Generation | ✅ Done | curriculum/module_03_advanced/03_mesh_generation.ipynb |
 | 3.20 | Higher-Order Schemes | ✅ Done | curriculum/module_03_advanced/04_higher_order_schemes.ipynb, exercise/higher_order_schemes.ipynb |
-| 3.21 | Multigrid Methods | ⏳ Pending | — |
+| 3.21 | Multigrid Methods | ✅ Done (4.5/6 = 75%) | curriculum/module_03_advanced/05_multigrid_methods.ipynb |
 | 3.22 | Unsteady Flows | ⏳ Pending | — |
 | 3.23 | Compressible Flow | ⏳ Pending | — |
 | 3.24 | Physics-Informed Neural Networks | ⏳ Pending | — |
@@ -258,6 +258,21 @@
 - Common mistake: said cells "reduce size" away from wall — corrected: cells GROW (coarser) away from wall
 - Notebooks: curriculum/module_03_advanced/03_mesh_generation.ipynb + exercise/mesh_design.ipynb
 
+### 3.21 — Multigrid Methods (✅ Complete — 12 Jun 2026, 4.5/6 = 75%)
+
+- Amplification factor: G(k) = cos(k·π/N) — Jacobi/GS multiplies error mode k by G(k) each sweep
+- High-freq (k≈N): G→0, killed in a few sweeps. Low-freq (k≈1): G≈1−π²/2N²≈1, survives thousands of sweeps
+- "Line of people" analogy: a local spike averages out in ~5 rounds; a smooth end-to-end ramp takes ~N² rounds
+- O(N²) stalling: iterations ~ 2N²/π² — refining the mesh 4× needs 16× more GS iterations (the Module 2.14 wall)
+- "Step back" idea: the same smooth error, viewed on a coarser grid, looks more oscillatory relative to that grid's spacing → smaller G(k) → the same smoother kills it faster there
+- Restriction (full-weighting): r_coarse_i = (1/4)·r_fine_{2i-1} + (1/2)·r_fine_{2i} + (1/4)·r_fine_{2i+1} — vs injection (every-other-point), which can silently drop a residual spike entirely
+- Prolongation (linear interpolation): shared (even) points copy directly; new (odd) fine points = average of neighboring coarse values
+- V-cycle: recursive — smooth, compute residual, restrict, recurse on coarser grid, prolongate the correction back, smooth again; bottoms out at a tiny grid (exact solve)
+- Complexity: one V-cycle costs ~2N total (geometric series N + N/2 + N/4 + ...) = O(N); GS needs O(N²) iterations × O(N) per sweep = O(N³)
+- Debugging episode: gauss_seidel/residual in the curriculum notebook had a sign error (solving u''=f instead of -u''=f). Symptom: rho_mg≈1 (flat, wrong plateau) and rho_gs>1 (error growing). Fixed both formulas (+f[i]·dx² instead of -f[i]·dx²) → confirmed working: rho_mg=0.930, rho_gs=0.99940, MG error drops suddenly vs GS gradual decrease
+- Quiz gaps: (1) G(2) for N=32 calculation slip — correct value is cos(2π/32)=cos(π/16)≈0.981; (2) misconception that multigrid's smoother is "better/different" — corrected: the smoother (GS, same G(k) formula) is IDENTICAL at every grid level; the multi-level strategy itself (same smoother, different grid spacings) is the speedup
+- Notebook: curriculum/module_03_advanced/05_multigrid_methods.ipynb (restructured this session — added analogies, full LaTeX formulas, Demo 1/2 fine-vs-coarse comparison, transfer operators, V-cycle implementation, convergence table)
+
 ---
 
 ## Common Mistakes
@@ -281,6 +296,8 @@
 | Mixing-length only limitation: local (no history) | Also: no transport — cannot carry k from upstream |
 | ε near wall is finite, just needs fine grid | ε → ∞ as y→0 analytically — no valid boundary condition |
 | Cells grow smaller away from wall | Cells GROW (coarser) away from wall — that is the point |
+| G(2) for N=32 ≈ 0.99999 (calculation slip) | G(2) = cos(2π/32) = cos(π/16) ≈ 0.981 |
+| Multigrid converges faster because its smoother is "better"/different | Smoother (GS, G(k)=cos(kπ/N)) is IDENTICAL at every level — the multi-level (coarse-grid) strategy is the actual speedup |
 
 ---
 
@@ -294,5 +311,6 @@
 - Combined 2D stability: CFL_x + CFL_y + 4r ≤ 1 (student hit instability at r=0.35)
 - FVM mass conservation = 0.00e+00 exactly — student verified and understood why
 - Student asks good research questions (ML for α in SIMPLE) — encourage but redirect to finish implementation first
-- **Current session:** Module 3.20 — Higher-Order Schemes (QUICK, TVD, MUSCL, limiters)
+- **Current session:** Module 3.21 — Multigrid Methods complete (4.5/6 = 75%). Next: ask student to choose — Module 3.22 (Unsteady Flows), or apply multigrid to the cavity solver's pressure-Poisson step
 - Prior knowledge to connect to: 1st-order upwind numerical diffusion, central diff instability, FVM face interpolation, Ghia validation undershoot traced to 1st-order upwind
+- **Open issue (not actively worked):** exercise/lid_driven_cavity_tvd_staggered.ipynb (staggered MAC grid, direct sparse Poisson solve) — u-velocity matches Ghia (1982), but v-velocity profile still doesn't match; student deferred this
