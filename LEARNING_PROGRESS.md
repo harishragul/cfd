@@ -1,7 +1,7 @@
 # CFD Learning Progress
 
 > Read automatically by the CFD Tutor agent at the start of every session.
-> Last updated: 12 Jun 2026
+> Last updated: 30 Jul 2026
 
 ---
 
@@ -39,6 +39,7 @@
 | exercise/flow_over_vertical_plate.ipynb | Vertical plate flow |
 | exercise/mesh_design.ipynb | Mesh design — geometric clustering, y+ |
 | exercise/higher_order_schemes.ipynb | TVD advection — minmod, van Leer, superbee, MC limiters |
+| exercise/unsteady_time_integration.ipynb | Euler, AB2, RK4 — order of accuracy, stability regions |
 
 ### Created by the AI AGENT (reference / teaching material)
 
@@ -97,7 +98,7 @@
 | 3.19 | Mesh Generation | ✅ Done | curriculum/module_03_advanced/03_mesh_generation.ipynb |
 | 3.20 | Higher-Order Schemes | ✅ Done | curriculum/module_03_advanced/04_higher_order_schemes.ipynb, exercise/higher_order_schemes.ipynb |
 | 3.21 | Multigrid Methods | ✅ Done (4.5/6 = 75%) | curriculum/module_03_advanced/05_multigrid_methods.ipynb |
-| 3.22 | Unsteady Flows | ⏳ Pending | — |
+| 3.22 | Unsteady Flows | ✅ Done (4.25/7 = 61%) | curriculum/module_03_advanced/06_unsteady_flows.ipynb, exercise/unsteady_time_integration.ipynb |
 | 3.23 | Compressible Flow | ⏳ Pending | — |
 | 3.24 | Physics-Informed Neural Networks | ⏳ Pending | — |
 | — | Module 3 Test | ⏳ Pending | — |
@@ -273,6 +274,25 @@
 - Quiz gaps: (1) G(2) for N=32 calculation slip — correct value is cos(2π/32)=cos(π/16)≈0.981; (2) misconception that multigrid's smoother is "better/different" — corrected: the smoother (GS, same G(k) formula) is IDENTICAL at every grid level; the multi-level strategy itself (same smoother, different grid spacings) is the speedup
 - Notebook: curriculum/module_03_advanced/05_multigrid_methods.ipynb (restructured this session — added analogies, full LaTeX formulas, Demo 1/2 fine-vs-coarse comparison, transfer operators, V-cycle implementation, convergence table)
 
+### 3.22 — Unsteady Flows (✅ Complete — 30 Jul 2026, 4.25/7 = 61%)
+
+- Stability vs accuracy are separate axes: stability = |G|≤1 (bounded, doesn't blow up); accuracy = trajectory matches true physical time-history between steps
+- Wagon-wheel analogy: a stable-but-too-large Δt doesn't crash — it calmly hands you the wrong frequency/shape, exactly like a camera under-sampling a spinning wheel
+- Forward Euler: u^{n+1}=u^n+Δt·F(u^n), 1st order, G(z)=1+z
+- AB2: u^{n+1}=u^n+Δt(1.5F(u^n)-0.5F(u^{n-1})), 2nd order, needs Forward-Euler bootstrap for step 1 (no history yet)
+- RK4: 4 in-step "scouts" (k1 start, k2/k3 midpoint refined twice, k4 endpoint), weighted 1:2:2:1 like Simpson's rule; no history needed, no bootstrap; 4th order for 4 evals/step
+- Order of accuracy = asymptotic (Δt→0) statement: error = C1·Δt^p + C2·Δt^(p+1) + ...; higher-order correction terms are non-negligible at large Δt (skewing measured slope above/below p) and vanish faster than the leading term as Δt shrinks — measured slope converges to true order p only in this "asymptotic range"
+- Amplification factor z=λΔt: diffusion → λ real negative; central-diff advection → λ purely imaginary (sits exactly on imaginary axis)
+- Forward Euler's stability disk touches the imaginary axis only at the origin → central-diff advection is unconditionally unstable for Euler at any Δt>0 (explains the Module 1.6 rule from first principles); upwind's numerical diffusion adds a real (damping) part to λ, dragging z off the axis into the disk, enabling a stable CFL≤1
+- RK4's stability region bulges out along the imaginary axis (~±2.8) → can handle pure advection directly without needing upwind dissipation as a crutch
+- Implicit CN/BDF2: stability region = entire left half-plane → unconditionally stable for diffusion
+- Dual time-stepping (PIMPLE = PISO+SIMPLE): two clocks — physical time (outer, small Δt, accuracy-driven) and pseudo-time (inner, fictitious, exists only to converge the SIMPLE-like predictor-corrector within one physical frame before continuity ∇·u=0 is satisfied and the frame is "drawn")
+- Δt selection: must satisfy CFL (stability) AND frames-per-cycle (accuracy, target 50–100 steps/period, cf. Nyquist) simultaneously — take the smaller/stricter of the two, never just the CFL-derived one
+- Bug caught by student independently: AB2 loop indexed `u_ab2[n-1]` at n=0, which wrapped to the array's last (still-zero) element instead of a real previous slope — fixed with proper Forward-Euler bootstrap for step 1
+- Bug caught by instructor: stability-region grid used `np.arange(-4,2)` (6 integer points, default step 1) instead of `np.linspace(-4,2,400)` — too coarse to resolve a smooth stability boundary
+- Quiz gaps (4.25/7): Q2 sign error (Δt computed as -0.25 instead of 0.25 — physical Δt can't be negative); Q4 didn't state formal order explicitly (both schemes were 1st order); Q6 explained pseudo-time purpose but not why a single SIMPLE pass per physical step is insufficient (predictor alone doesn't satisfy continuity); **Q7 — confused shedding period (T=1/f) with the required accuracy Δt (T/frames-per-cycle), leading to picking the CFL Δt over the stricter accuracy Δt — the exact wagon-wheel trap the lesson warned about**
+- Notebooks: curriculum/module_03_advanced/06_unsteady_flows.ipynb (pre-existing reference) + exercise/unsteady_time_integration.ipynb (student-built: Euler/AB2/RK4 implementations, convergence study, stability region plots)
+
 ---
 
 ## Common Mistakes
@@ -298,6 +318,8 @@
 | Cells grow smaller away from wall | Cells GROW (coarser) away from wall — that is the point |
 | G(2) for N=32 ≈ 0.99999 (calculation slip) | G(2) = cos(2π/32) = cos(π/16) ≈ 0.981 |
 | Multigrid converges faster because its smoother is "better"/different | Smoother (GS, G(k)=cos(kπ/N)) is IDENTICAL at every level — the multi-level (coarse-grid) strategy is the actual speedup |
+| Δt just needs to satisfy CFL for unsteady flows | CFL only guarantees stability; also need ≥50–100 steps per physical period for accuracy — take the smaller (stricter) of the two Δt |
+| Confusing shedding period T=1/f with the required accuracy Δt | Δt_accuracy = T / (frames-per-cycle), e.g. 0.25s period / 60 frames ≈ 0.0042s, not 0.25s itself |
 
 ---
 
@@ -311,6 +333,7 @@
 - Combined 2D stability: CFL_x + CFL_y + 4r ≤ 1 (student hit instability at r=0.35)
 - FVM mass conservation = 0.00e+00 exactly — student verified and understood why
 - Student asks good research questions (ML for α in SIMPLE) — encourage but redirect to finish implementation first
-- **Current session:** Module 3.21 — Multigrid Methods complete (4.5/6 = 75%). Next: ask student to choose — Module 3.22 (Unsteady Flows), or apply multigrid to the cavity solver's pressure-Poisson step
+- **Current session:** Module 3.22 — Unsteady Flows complete (4.25/7 = 61%). Next: Module 3.23 (Compressible Flow), or revisit the CFL-vs-accuracy Δt selection gap (Q7) with a fresh example before moving on
+- Student self-debugged a genuine numpy negative-indexing bug in the AB2 loop (u_ab2[n-1] wrapping to the array's last element at n=0) — good instinct for spotting a scheme that's "too accurate to be true" as a red flag worth investigating
 - Prior knowledge to connect to: 1st-order upwind numerical diffusion, central diff instability, FVM face interpolation, Ghia validation undershoot traced to 1st-order upwind
 - **Open issue (not actively worked):** exercise/lid_driven_cavity_tvd_staggered.ipynb (staggered MAC grid, direct sparse Poisson solve) — u-velocity matches Ghia (1982), but v-velocity profile still doesn't match; student deferred this
